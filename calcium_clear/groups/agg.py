@@ -1,7 +1,6 @@
 from typing import Callable, Dict, List, Union
 from .mapper import validate_mapper
 import pandas as pd
-import warnings
 
 
 def aggregate_groups_time(
@@ -12,10 +11,10 @@ def aggregate_groups_time(
     handle_missing: str = "raise",
 ) -> pd.DataFrame:
     """
-    This function aggregates columns in a DataFrame based on groups specified in a dictionary.
+    Aggregates columns in a DataFrame based on groups specified in a dictionary.
     It applies an aggregation function to each group of columns and returns a DataFrame with the aggregated values.
 
-    Parameters:
+    Args:
         df_wide (pandas.DataFrame): Input DataFrame
         group_dict (dict): Dictionary specifying the groups. Keys are group names, values are lists of column names in each group.
         agg_func (Union[str, Callable]): Function to use for aggregating the data. Can be a callable or a string specifying a pandas function.
