@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from binit import align_around, which_bin_idx
-from typing import Optional
 from joblib import Parallel, delayed
 
 
@@ -15,7 +14,7 @@ def align_to_events(
     created_aligned_time_col: str = "aligned_time",
     round_precision: int = 1,
     drop_non_aligned: bool = True,
-):
+) -> pd.DataFrame:
     """
     Aligns a dataframe to events, creating a new column with the aligned time
     and a new column with the index of the event that was aligned to.
@@ -62,7 +61,24 @@ def align_to_events_long(
     created_value_col: str = "value",
     round_precision: int = 1,
     drop_non_aligned: bool = True,
-):
+) -> pd.DataFrame:
+    """
+    Aligns a dataframe to events, creating a new column with the aligned time and returning a long-format dataframe.
+
+    Args:
+        df_wide (pd.DataFrame): A dataframe with a time column.
+        events (np.ndarray): A numpy array of event times.
+        t_before (float): The time before the event to align to.
+        t_after (float): The time after the event to align to.
+        time_col (str): The name of the time column in df_wide.
+        created_event_index_col (str): The name of the new column with the index of the event that was aligned to.
+        round_precision (int): The number of decimal places to round the aligned time to.
+        created_aligned_time_col (str): The name of the new column with the aligned time.
+        drop_non_aligned (bool): Whether to drop rows that were not aligned to an event.
+
+    Returns:
+        df_long (pd.DataFrame): A long-format dataframe with the aligned time and the index of the event that was aligned to.
+    """
     df_aligned = align_to_events(
         df_wide=df_wide,
         events=events,
@@ -102,26 +118,29 @@ def align_to_events_grouped_long(
     created_neuron_col: str = "neuron",
     created_value_col: str = "value",
     drop_non_aligned: bool = True,
-):
+) -> pd.DataFrame:
     """
+    Aligns a dataframe to events, creating a new column with the aligned time. Returns a long-format dataframe.
 
     Args:
-        df_wide: A dataframe with a time column and a group column.
-        df_events: A dataframe of event times and their respective group.
-        t_before: The time before the event to align to.
-        t_after: The time after the event to align to.
-        df_wide_time_col: The name of the time column in df_wide.
-        df_events_event_time_col: The name of the event time column in df_events.
-        df_events_group_col: The name of the group column in df_events.
-        created_event_index_col: The name of the new column in df_wide with the index
-            of the event that was aligned to.
-        created_aligned_time_col: The name of the new column in df_wide with the aligned time.
-        drop_non_aligned: Whether to drop rows in df_wide that were not aligned to an event.
+        df_wide (pd.DataFrame): A dataframe with a time column.
+        df_events (pd.DataFrame): A dataframe with event times and group information.
+        t_before (float): The time before the event to align to.
+        t_after (float): The time after the event to align to.
+        df_wide_group_mapper (dict): A dictionary mapping group names to column names in df_wide.
+        round_precision (int): The number of decimal places to round the aligned time to.
+        n_jobs (int): The number of jobs to run in parallel.
+        df_wide_time_col (str): The name of the time column in df_wide.
+        df_events_event_time_col (str): The name of the event time column in df_events.
+        df_events_group_col (str): The name of the group column in df_events.
+        created_event_index_col (str): The name of the new column with the index of the event that was aligned to.
+        created_aligned_time_col (str): The name of the new column with the aligned time.
+        created_neuron_col (str): The name of the new column with the neuron name.
+        created_value_col (str): The name of the new column with the value.
+        drop_non_aligned (bool): Whether to drop rows that were not aligned to an event.
 
     Returns:
-        df_wide: The input df_wide dataframe after alignment to the events. Each row now
-        includes the aligned time and the index of the event that it was aligned to.
-
+        df_long (pd.DataFrame): A long-format dataframe with the aligned time and the index of the event that was aligned to.
     """
 
     unique_groups_df = list(df_wide_group_mapper.keys())
@@ -187,7 +206,32 @@ def align_to_events_grouped(
     created_neuron_col: str = "neuron",
     created_value_col: str = "value",
     drop_non_aligned: bool = True,
-):
+) -> pd.DataFrame:
+    """
+    Aligns a dataframe of data from multiple groups to a dataframe of events from the corresponding groups.
+
+    Data from the data dataframe is aligned to events from the events dataframe based on the group information in both dataframes.
+
+    Args:
+        df_wide (pd.DataFrame): A dataframe with a time column.
+        df_events (pd.DataFrame): A dataframe with event times and group information.
+        t_before (float): The time before the event to align to.
+        t_after (float): The time after the event to align to.
+        df_wide_group_mapper (dict): A dictionary mapping group names to column names in df_wide.
+        round_precision (int): The number of decimal places to round the aligned time to.
+        n_jobs (int): The number of jobs to run in parallel.
+        df_wide_time_col (str): The name of the time column in df_wide.
+        df_events_event_time_col (str): The name of the event time column in df_events.
+        df_events_group_col (str): The name of the group column in df_events.
+        created_event_index_col (str): The name of the new column with the index of the event that was aligned to.
+        created_aligned_time_col (str): The name of the new column with the aligned time.
+        created_neuron_col (str): The name of the new column with the neuron name.
+        created_value_col (str): The name of the new column with the value.
+        drop_non_aligned (bool): Whether to drop rows that were not aligned to an event.
+
+    Returns:
+        df_wide (pd.DataFrame): A wide-format dataframe with the aligned time and the index of the event that was aligned to.
+    """
     df_long = align_to_events_grouped_long(
         df_wide=df_wide,
         df_events=df_events,
@@ -207,7 +251,7 @@ def align_to_events_grouped(
     )
     return (
         df_long.pivot_table(
-            index=[created_aligned_time_col, created_event_index_col],
+            index=[created_aligned_time_col, created_event_index_col, df_wide_time_col],
             values=created_value_col,
             columns=created_neuron_col,
         )
