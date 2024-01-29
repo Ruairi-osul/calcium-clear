@@ -1,5 +1,7 @@
-from typing import Optional, Callable
+from typing import Optional, Callable, TypeVar
 import pandas as pd
+
+T = TypeVar("T")
 
 
 def _validate_inputs(
@@ -7,27 +9,20 @@ def _validate_inputs(
     time_col: str,
     t_start: Optional[float],
     t_stop: Optional[float],
-    custom_filter: Optional[Callable[[pd.DataFrame], pd.Series]],
+    custom_filter: Optional[Callable[[T], T]],
 ):
     """
     Validate the inputs to the function filter_by_time.
 
-    Parameters
-    ----------
-    df_wide
-        Wide-format dataframe.
-    time_col
-        Column in df_wide that contains time information.
-    t_start
-        Start time for filtering.
-    t_stop
-        Stop time for filtering.
-    custom_filter
-        Custom filter function that takes a DataFrame and returns a Series of booleans.
+    Args:
+        ff_wide (pd.DataFrame): Wide-format dataframe.
+        time_col (str): Column in df_wide that contains time information.
+        t_start (Optional[float]): Start time for filtering.
+        t_stop (Optional[float]): Stop time for filtering.
+        custom_filter (Optional[Callable[[T], T]]): Custom filter function that takes a DataFrame and returns a Series of booleans.
 
-    Returns
-    -------
-    None
+    Returns:
+    - None
     """
     # Validate dataframe inputs
     assert isinstance(df_wide, pd.DataFrame), "df_wide should be a pandas DataFrame"
@@ -51,29 +46,20 @@ def filter_by_time(
     time_col: str = "time",
     t_start: Optional[float] = None,
     t_stop: Optional[float] = None,
-    custom_filter: Optional[Callable[[pd.DataFrame], pd.Series]] = None,
+    custom_filter: Optional[Callable[[T], T]] = None,
 ) -> pd.DataFrame:
     """
     Filter a wide-format dataframe by time.
 
-    Parameters
-    ----------
-    df_wide
-        Wide-format dataframe.
-    time_col
-        Column in df_wide that contains time information.
-    t_start
-        Start time for filtering.
-    t_stop
-        Stop time for filtering.
-    custom_filter
-        Custom filter function that takes a DataFrame and returns a Series of booleans.
+    Args:
+        df_wide (pd.DataFrame): Wide-format dataframe.
+        time_col (str): Column in df_wide that contains time information.
+        t_start (Optional[float]): Start time for filtering.
+        t_stop (Optional[float]): Stop time for filtering.
+        custom_filter (Optional[Callable[[T], T]]): Custom filter function that takes a DataFrame and returns a Series of booleans.
 
-    Returns
-    -------
-    pd.DataFrame
-        Filtered dataframe.
-
+    Returns:
+        pd.DataFrame: the filtered dataframe
     """
     # Validate inputs
     _validate_inputs(df_wide, time_col, t_start, t_stop, custom_filter)

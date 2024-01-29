@@ -12,22 +12,18 @@ def _validate_inputs(
     """
     Validate the inputs to the function filter_by_group.
 
-    Parameters
-    ----------
-    df_wide
-        Wide-format dataframe.
-    df_meta
-        Metadata dataframe.
-    df_wide_other_cols
-        Other columns to include in the filtered dataframe.
-    df_meta_group_col
-        Column in metadata dataframe that contains group information.
-    df_meta_cell_col
-        Column in metadata dataframe that contains cell information.
+    Args:
+        df_wide (pd.DataFrame): Wide-format dataframe.
+        df_meta (pd.DataFrame): Metadata dataframe.
+        df_wide_other_cols (Optional[Union[str, Sequence[str]]]): Other columns to include in the filtered dataframe.
+        df_meta_group_col (str): Column in metadata dataframe that contains group information.
+        df_meta_cell_col (str): Column in metadata dataframe that contains cell information.
 
-    Returns
-    -------
-    None
+    Returns:
+        None
+
+    Raises:
+        AssertionError: If any of the inputs are invalid.
     """
     # Validate dataframe inputs
     assert isinstance(df_wide, pd.DataFrame), "df_wide should be a pandas DataFrame"
@@ -71,38 +67,31 @@ def filter_by_group(
     """
     Filter a wide-format dataframe by group.
 
-    Parameters
-    ----------
-    df_wide
-        Wide-format dataframe.
-    df_meta
-        Metadata dataframe.
-    group
-        Group(s) to filter by.
-    df_wide_other_cols
-        Other columns to include in the filtered dataframe.
-    df_meta_group_col
-        Column in metadata dataframe that contains group information.
-    df_meta_cell_col
-        Column in metadata dataframe that contains cell information.
-    inclusive
-        Whether to include or exclude the group(s).
 
-    Returns
-    -------
-    pd.DataFrame
-        Filtered dataframe.
+    Args:
+        df_wide (pd.DataFrame): Wide-format dataframe.
+        df_meta (pd.DataFrame): Metadata dataframe.
+        group (Union[str, Sequence[str]]): Group(s) to filter by.
+        df_wide_other_cols (Optional[Union[str, Sequence[str]]]): Other columns to include in the filtered dataframe.
+        df_meta_group_col (str): Column in metadata dataframe that contains group information.
+        df_meta_cell_col (str): Column in metadata dataframe that contains cell information.
+        inclusive (bool): Whether to include or exclude the specified group(s).
 
-    Example
-    -------
-    >>> df_wide = pd.DataFrame(...)
-    >>> df_meta = pd.DataFrame(...)
-    >>> group = 'group1'
-    >>> df_wide_other_cols = ['time']
-    >>> df_meta_group_col = 'group'
-    >>> df_meta_cell_col = 'cell_id'
-    >>> inclusive = True
-    >>> filtered_df = filter_by_group(df_wide, df_meta, group, df_wide_other_cols, df_meta_group_col, df_meta_cell_col, inclusive)
+    Returns:
+        pd.DataFrame: Filtered dataframe.
+
+    Raises:
+        AssertionError: If any of the inputs are invalid.
+
+    Example:
+        >>> df_wide = pd.DataFrame(...)
+        >>> df_meta = pd.DataFrame(...)
+        >>> group = 'group1'
+        >>> df_wide_other_cols = ['time']
+        >>> df_meta_group_col = 'group'
+        >>> df_meta_cell_col = 'cell_id'
+        >>> inclusive = True
+        >>> filtered_df = filter_by_group(df_wide, df_meta, group, df_wide_other_cols, df_meta_group_col, df_meta_cell_col, inclusive)
     """
     # Validate inputs
     _validate_inputs(

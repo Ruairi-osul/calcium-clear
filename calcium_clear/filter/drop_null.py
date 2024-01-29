@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Sequence, Union
+from typing import Optional, Union
 import pandas as pd
 
 
@@ -7,21 +7,14 @@ def drop_null_traces(
     thresh: Optional[int] = 5000,
 ) -> pd.DataFrame:
     """
-    Drop columns in a wide-format dataframe that don't have at least `thresh` non-NA values.
+    Drop traces that have less than a threshold number of non-null values.
 
-    Parameters
-    ----------
-    df_wide
-        Wide-format dataframe.
-    thresh
-        Require that many non-NA values.
+    Args:
+        df_wide (pd.DataFrame): wide dataframe with traces
+        thresh (int, optional): threshold for number of non-null values. Defaults to 5000.
 
-    Returns
-    -------
-    pd.DataFrame
-        Filtered dataframe.
-
-
+    Returns:
+        pd.DataFrame: dataframe with null traces dropped
     """
     # Validate dataframe inputs
     assert isinstance(df_wide, pd.DataFrame), "df_wide should be a pandas DataFrame"

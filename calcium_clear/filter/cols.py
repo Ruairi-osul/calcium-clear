@@ -7,28 +7,24 @@ def select_columns(
     cols: Sequence[str],
     inclusive: bool = True,
     on_error: str = "raise",
-):
+) -> pd.DataFrame:
     """
     Select a pre-specified set of columns from a pandas DataFrame.
 
-    Parameters
-    ----------
-    df : pd.DataFrame
-        Input DataFrame.
-    cols : list
-        List of columns to select.
-    inclusive : bool, optional
-        If True, select specified columns,
-        if False, exclude specified columns. Default is True.
-    on_error : str, optional
-        What to do if specified columns are not found. 'raise' to raise an error,
-        'skip' to ignore missing columns, 'pass' to pass the entire DataFrame
-        if any column is missing. Default is 'raise'.
+    Args:
+        df (pd.DataFrame): DataFrame to select columns from.
+        cols (Sequence[str]): List of column names to select.
+        inclusive (bool): Whether to select the columns specified in `cols`
+            (True) or to select all columns except those specified in `cols` (False).
+            Defaults to True.
+        on_error (Optional[str]): How to handle the case where one or more columns
+            specified in `cols` are not found in `df`. If 'raise', raise a ValueError.
+            If 'skip', return only the columns that are found in `df`. If 'pass',
+            return the original DataFrame. Defaults to 'raise'.
 
-    Returns
-    -------
-    pd.DataFrame
-        Output DataFrame.
+
+    Returns:
+        pd.DataFrame: DataFrame with selected columns.
     """
     if not set(cols).issubset(df.columns):
         missing_cols = list(set(cols) - set(df.columns))
