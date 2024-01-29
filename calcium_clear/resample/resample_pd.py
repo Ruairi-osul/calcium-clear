@@ -1,5 +1,5 @@
 import pandas as pd
-from typing import Optional, List, Dict, Union
+from typing import Optional, Dict
 
 
 def resample_traces(
