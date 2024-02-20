@@ -206,6 +206,7 @@ def align_to_events_grouped(
     created_neuron_col: str = "neuron",
     created_value_col: str = "value",
     drop_non_aligned: bool = True,
+    drop_time_col: bool = True,
 ) -> pd.DataFrame:
     """
     Aligns a dataframe of data from multiple groups to a dataframe of events from the corresponding groups.
@@ -228,6 +229,7 @@ def align_to_events_grouped(
         created_neuron_col (str): The name of the new column with the neuron name.
         created_value_col (str): The name of the new column with the value.
         drop_non_aligned (bool): Whether to drop rows that were not aligned to an event.
+        drop_time_col (bool): Whether to drop the time column from the output dataframe.
 
     Returns:
         df_wide (pd.DataFrame): A wide-format dataframe with the aligned time and the index of the event that was aligned to.
@@ -249,9 +251,12 @@ def align_to_events_grouped(
         created_value_col=created_value_col,
         drop_non_aligned=drop_non_aligned,
     )
+    index_cols = [created_aligned_time_col, created_event_index_col]
+    if not drop_time_col:
+        index_cols.append(df_wide_time_col)
     return (
         df_long.pivot_table(
-            index=[created_aligned_time_col, created_event_index_col, df_wide_time_col],
+            index=index_cols,
             values=created_value_col,
             columns=created_neuron_col,
         )

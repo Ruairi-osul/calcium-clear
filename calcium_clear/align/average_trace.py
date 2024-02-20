@@ -147,9 +147,10 @@ def average_trace_grouped(
         df_events_event_time_col=df_events_event_time_col,
         df_events_group_col=df_events_group_col,
         created_aligned_time_col=created_aligned_time_col,
+        drop_time_col=True,
     )
     df_average_trace = (
-        df_aligned.drop(["event_idx", df_wide_time_col], axis=1)
+        df_aligned.drop(["event_idx"], axis=1)
         .groupby(created_aligned_time_col)
         .agg(agg_func)
     )
