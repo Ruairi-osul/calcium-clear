@@ -8,10 +8,10 @@ def resample_traces(
     resample_frequency: float = 0.1,
     resample_strategy: str = "ffill",
 ) -> pd.DataFrame:
-    df_wide.loc[:, time_col] = pd.to_timedelta(df_wide[time_col], unit="s")
+    df_wide.loc[:, time_col] = df_wide[time_col].apply(lambda x: pd.to_timedelta(x, unit="s"))
     df_wide.set_index(time_col, inplace=True)
 
-    df_resampled = df_wide.resample(f"{resample_frequency}S").agg(resample_strategy)
+    df_resampled = df_wide.resample(f"{resample_frequency}s").agg(resample_strategy)
     df_resampled.reset_index(inplace=True)
     df_resampled[time_col] = df_resampled[time_col].dt.total_seconds()
     return df_resampled
